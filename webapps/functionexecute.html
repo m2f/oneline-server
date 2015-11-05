@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Data service</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/jquery-ui.css">
+
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/controller.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/apiTest.js"></script>
+	<script type="text/javascript" src="js/table.js"></script>
+	<script type="text/javascript" src="js/appConfig.js"></script>
+
+    <script type="text/javascript">
+
+    var funcId;
+	$(document).ready(function () {
+
+		paintHeaderAndFooter();
+		document.getElementById('pooldbEl').value = getCookie("poolname");
+		var url = window.location.href;
+		url = decodeURIComponent(url);
+		var args = getDecodedUrlVars(url);
+		funcId = args["funcId"];
+		
+		if (args["funcId"]) {
+			getFunction(args["funcId"]);
+		}
+	});
+
+    </script>
+</head>
+
+<body class="template--companySetup">
+
+    <span id="spanError" class="error-msg"></span>
+	<div id="divHeader"></div>
+
+	<div class="grid-row-container" id="testThis">
+		<div class="grid-row">
+		<br/>
+		
+			<div class="form-row">
+				<label class="label--input" for="pooldbEl">Configuration name</label>
+				<input name="pooldbEl" id="pooldbEl" class="input--text" value="configpool" />
+			</div>
+			
+			<div class="form-row">
+				<label class="label--input" for="funcIdEl">Function Id</label>
+				<input name="funcIdEl" id="funcIdEl" class="input--text" readonly/>
+			</div>
+			
+			<div class="form-row">
+				<label class="label--input" for="funcBodyEl">Function Body</label>
+				<textarea name="funcBodyEl" id="funcBodyEl" class="input--textarea" style="height:150px; width:800px; padding:10px 20px;" readonly></textarea>
+			</div>
+			
+			<div class="form-row--meta" id="legendEl"><span class="alert">*</span> = Mandatory</div>
+
+			<div class="form-row--submit">
+				<input name="executeEl" id="executeEl" type=button value="Execute Function" onclick="runFunction(funcId)"/>
+			</div>
+			
+				<span id="spanError" class="error-msg"></span>
+				<br />
+		</div>
+	</div>
+		<div class="grid-row-container" id="testThis2">
+			<div class="grid-row"></div>
+		</div>
+
+	<!--[if lt IE 10]>
+      <p class="browser-warning">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+<div id="divFooter"></div>
+</body>
+</html>

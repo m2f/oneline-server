@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Data service</title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width">
+		<link rel="shortcut icon" href="favicon.ico">
+
+		<link rel="stylesheet" href="styles/main.css">
+		<link rel="stylesheet" href="styles/jquery-ui.css">
+
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script src="js/jquery-ui.js"></script>
+		<script type="text/javascript" src="js/controller.js"></script>
+		<script type="text/javascript" src="js/login.js"></script>
+		<script type="text/javascript" src="js/validation.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+
+	</head>
+
+	<body class="template--login">
+
+		<!-- HEADER -->
+		<div class="grid-row-container">
+			<div class="grid-row">
+				<!-- logo -->
+				<div class="containter-logo">
+				</div>
+			</div>
+		</div>
+		<!-- // HEADER -->
+
+		<div class="grid-row-container">
+			<div class="grid-row">
+
+				<form>
+					<div class="form-row">
+						<input type="text" placeholder="User Id" name="loginidEl" id="loginidEl" class="input--text" />
+					</div>
+
+					<div class="form-row--submit">
+						<input name="form-submit" id="form-submit" type=button value="Reset" onclick="if (validateResetForm()) {resetPassword();}"/>
+					</div>
+					<br /><span id="spanError" class="error-msg"></span>
+				</form>
+			</div>
+		</div>
+
+		<!--[if lt IE 10]>
+		  <p class="browser-warning">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+		<![endif]-->
+
+	</body>
+</html>

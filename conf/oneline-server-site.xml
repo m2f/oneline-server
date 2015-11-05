@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<configuration>
+
+	<property>
+		<name>default.role</name>
+		<value>guest</value>
+		<description>The default role for registration.
+		</description>
+	</property>
+
+	<property>
+		<name>privatekey</name>
+		<value>J@*Y21HUI3R82323</value>
+		<description>
+			The secret private key helps in creating the hash code.
+		</description>
+	</property>
+
+	<property>
+		<name>subdomain</name>
+		<value></value>
+		<description>
+			The cookie is set for this domain.
+		</description>
+	</property>
+
+	<property>
+		<name>db.conf</name>
+		<value>jdbc.conf</value>
+		<description>This is the configuration file from where JDBC is
+			initialized.</description>
+	</property>
+
+	<property>
+		<name>rest.services</name>
+		<value>com.bizosys.oneline.servlet.UserMessagesSetup</value>
+		<description>
+			Comma separated list of Service classes.
+			All services must implement Sensor interfaces.
+		</description>
+	</property>
+
+
+	<property>
+		<name>services.to.start</name>
+		<value>sql,queue</value>
+		<description>
+			sql - Manages connection pool to the server.
+			async - Asynchronous processing of task
+			queue - Process the task putting in a queue.
+		</description>
+	</property>
+
+	<property>
+		<name>login.email.verification</name>
+		<value>false</value>
+		<description>
+			If a mail template is provided, it will send a welcome mail.
+			You can use __password as variables.
+		</description>
+	</property>
+
+	<property>
+		<name>messages.lang</name>
+		<value>en</value>
+		<description>
+		 	Language Package folder path.
+		 	Language Package file name E.g. messages.en
+		</description>
+	</property>
+	
+	<property>
+		<name>authenticator.class.name</name>
+		<value>com.bizosys.oneline.authorization.BlackholeAuthenticator</value>
+		<description>
+		For Cookie = com.bizosys.oneline.authorization.CookieAuthenticator
+		For Token = com.bizosys.oneline.authorization.TokenAuthentication
+		For None = com.bizosys.oneline.authorization.BlackholeAuthenticator
+		Default it is set to Token
+		</description>
+	</property>
+	
+	<property>
+		<name>authoriztion.class.name</name>
+		<value>com.bizosys.oneline.authorization.BlackholeAuthorizer</value>
+		<description>
+		For Cookie = com.bizosys.oneline.authorization.Permissions
+		For Token = com.bizosys.oneline.authorization.BlackholeAuthorizer
+		Default it is set to Token
+		</description>
+	</property>
+
+	<property>
+		<name>table.ids.amount</name>
+		<value></value>
+		<description>
+			The buffer capacity of sequencekeys given in the below format
+			seq1=100,seq2=200,seq3=500 etc
+		</description>
+	</property>
+
+	<property>
+		<name>table.ids.amount.default.value</name>
+		<value>100</value>
+		<description>
+			The default value to be used if not given in above property.
+		</description>
+	</property>
+	
+	<property>
+		<name>current.machine.ip</name>
+		<value>localhost</value>
+		<description>
+			The ip that it will use to find out the users to configure for database during startup.
+		</description>
+	</property>
+
+	<property>
+		<name>db.records.fetch.log.interval</name>
+		<value>5000</value>
+		<description>
+			The count interval after which a log will be written while fetching records from database.
+		</description>
+	</property>
+	
+</configuration>

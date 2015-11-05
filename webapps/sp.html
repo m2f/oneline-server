@@ -1,0 +1,403 @@
+﻿﻿<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Oneline Server</title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width">
+		<link rel="shortcut icon" href="favicon.ico">
+
+		<link rel="stylesheet" href="styles/main.css">
+		<link rel='stylesheet' href='styles/table.css' type='text/css' />
+		<link rel="stylesheet" href="styles/jquery-ui.css">
+
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script src="js/jquery-ui.js"></script>
+		<script type="text/javascript" src="js/table.js"></script>
+		<script type="text/javascript" src="js/controller.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/validation.js"></script>
+		<script type="text/javascript" src="js/appConfig.js"></script>
+
+		<script type="text/javascript">
+
+            var xyzTable = new OnelineTable("xyzTable", "");
+			var tablePK;
+			var tablePoolName;
+
+			$(document).ready(function() {
+
+				paintHeaderAndFooter();
+
+				xyzTable.tableDiv = document.getElementById("xyzTable.tableDiv");
+                xyzTable.registerLoadJsonFunction(loadAppConfigTable);
+                xyzTable.getTotalRowsForPagination = getTotalRowsForPaginationF;
+				xyzTable.refreshList();
+
+			});
+
+			function loadAppConfigTable(sort, filter) {
+
+				var queryJson = '{ queries : [ {queryid : "GET_SP_APP_CONFIG", params : [] } ] }';
+				var postData = {
+					service: "sql", action: "execute", query: queryJson, pool: "configpool",  format: "jsonp"
+				};
+
+				if (sort) postData.sort = sort;
+				if (filter) postData.where = filter;
+				if (xyzTable.offset) postData.offset = xyzTable.offset;
+				if (xyzTable.limit) postData.limit = xyzTable.limit;
+
+				try {
+					serverCallStart();
+					$.ajax ({
+						type: "GET",
+						async: false,
+						url: "oneline.html",
+						data: postData,
+						cache: false,
+						dataType: "text",
+						success: function onSuccess(data) {
+							try {
+								loadAppConfigTableSuccess(data);
+							} finally {
+								serverCallEnd();
+				        	}
+						},
+						error: function onError(data) {
+							serverCallEnd();
+							document.getElementById("spanError").innerHTML = data.responseText;
+						}
+					});
+				} catch(error) {
+					serverCallEnd();
+				};
+			}
+
+			function getTotalRowsForPaginationF() {
+
+				var queryJson = '{ queries : [ {queryid : "GET_SP_APP_CONFIG_COUNT", params : [] } ] }';
+				var xmlData = {
+					service : "sql", action : "execute", query : queryJson,  pool: "configpool", format: "jsonp"
+				};
+
+				if( xyzTable.tableListFilter && xyzTable.tableListFilter != "") xmlData.where = xyzTable.tableListFilter;
+
+				try {
+					serverCallStart();
+				$.ajax ({
+						type : "GET",
+						async : true,
+						url : "oneline.html",
+						data : xmlData,
+						cache : false,
+						dataType : "text",
+						success : function onSuccess(data) {
+							try {
+								var jsonData = $.parseJSON(data);
+								jsonData = jsonData[0];
+								var totalCount = jsonData['values'][0]['total'];
+								xyzTable.buildPaginationElement("GET_SP_APP_CONFIG_COUNT",  "loadPage", totalCount, xyzTable.offset);
+							} finally {
+							serverCallEnd();
+							}
+						},
+						error : function onError(data) {
+							serverCallEnd();
+							document.getElementById("spanError").innerHTML = data.responseText;
+						}
+					});
+				} catch(error) {
+				 	serverCallEnd();
+				};
+			}
+
+			function loadPage(pageNo) {
+				xyzTable.openAPage(pageNo);
+			}
+
+            function  loadAppConfigTableSuccess(data) {
+				
+				var headers = ['Name', 'Status', 'SP Pool', 'SP Body', 'SP Call', 'SP Output Vars', 'SP Error Var', 'Filter'];
+				var cols = ['sp_title', 'status', 'sp_poolname', 'sp_body', 'sp_call_syntax', 'sp_out_var', 'sp_err_var', 'ACTIONS'];
+				var filterFields = ['sp_title', 'status', 'sp_poolname', 'sp_body', 'sp_call_syntax', 'sp_out_var', 'sp_err_var', 'ACTIONS'];
+				var sortFields = ['sp_title', 'sp_body', 'status'];
+				var docTag = "values";
+
+                var intFilter = [];
+				var dateFilter = [];
+
+                xyzTable.selectFilterValCodes['status'] = ["", 'Y', 'N'];
+				xyzTable.selectFilterValDescCodes['status'] = ["Choose", "Active", "Inactive"];
+				
+                prepareSpAppConfigRecords(data);
+                xyzTable.loadJSonData(data, headers, cols, filterFields, sortFields, docTag, intFilter, dateFilter, listAppConfigTableOnRow , appConfigListsfilterDecorator);
+
+            }
+
+
+			function listAppConfigTableOnRow(row, col, val) {
+
+				if (col == 0) {
+					tablePK = xyzTable.records[row]['sp_title'];
+					return val;
+				}
+				
+				if (col == 1) {
+					if (val == "y" || val == "Y")
+						return "Active";
+
+					else if (val == "n" || val == "N")
+						return "Inactive";
+
+					else
+						return val;
+				}
+
+				if (col == 2) {
+					tablePoolName = xyzTable.records[row]['sp_poolname'];
+					return val;
+				}
+
+				if (col == 3) {
+					return atob(val);
+				}
+
+				if (col == 7) {
+					return "<a href='#' onclick='prepForEditSP(); viewSPDetails(\"" + tablePK + "\");'><img class='table-filter' src='table-images/edit.png'></a>"
+								+
+							" <a href='#' onclick='if (deleteSPFromDb( \"" + tablePK + "\",\""+ tablePoolName + "\",true) ) xyzTable.loadJSonF(xyzTable.tableListSortPart, xyzTable.tableListFilter);'><img class='table-filter' src='table-images/delete.png'></a>"
+								+
+							" <a href='#' onclick='prepForViewSP(); viewSPDetails(\"" + tablePK + "\")'><img class='table-filter' src='table-images/view.png'></a>"
+								+
+							" <a href='#' onclick='getAuthorizedUsers(\"" + tablePK + "\")'><img class='table-filter' src='table-images/user-permission.png'></a>" 
+                                +
+							" <a href='#' onclick='testSp(\"" + tablePK + "\")'><img class='table-filter' src='table-images/sql.png'></a>";
+				}
+				return val;
+			}
+
+	        //CUSTOM Based on the Decoator Type.
+            function appConfigListsfilterDecorator(filterField) {
+		        if (filterField == "status" || filterField == "system" ) {
+			        return xyzTable.getSelectFilterElem(filterField, xyzTable.filterVals[ filterField ], xyzTable.selectFilterValCodes[filterField],
+					        xyzTable.selectFilterValDescCodes[filterField], "xyzTable.fillFilterVal", "xyzTable.fetchResults");
+		        } else if (filterField == "ACTIONS")
+			        return xyzTable.getApplyFilterElem();
+		        return xyzTable.getTextFilterElem(filterField, xyzTable.filterVals[ filterField ], "xyzTable.fillFilterVal", "xyzTable.fetchResults");
+	        }
+
+
+		</script>
+	</head>
+	<body class="template--companySetup">
+
+		<div id="divHeader"></div>
+
+		<div class="grid-row-container">
+			<div class="grid-row">
+
+				<span id="spanError" class="error-msg"></span>
+				<br />
+				<h2>Store Procedures</h2>
+				<div class="button--goto">
+					<input name="add-app-config" id="add-app-config" type=button value="Add New SP" onclick="prepForAddSP();" style="display: inline-block;"/>
+					<input name="add-app-config" id="add-app-config" type=button value="Publish" onclick="refreshAuth();" style="display: inline-block;"/>
+				</div>
+				<div id="xyzTable.tableDiv" style="overflow: auto;">
+				</div>
+			</div>
+		</div>
+
+	<div id="divFooter"></div>
+
+		<div id="overlay-modal">
+
+			<div id="errorMessages" style="color: #c7254e; background-color: #f9f2f4;padding: 2px;text-align: center;"></div>
+
+			<h2 id="lightboxHeader">SP Details</h2>
+
+				<div class="form-row" style="display:none;">
+				<label class="label--input" for="idEl">ID</label>
+				<input name="idEl" id="idEl" class="input--text" readonly />
+				</div>
+
+				<div class="form-row" style="display:none;">
+				<label class="label--input" for="sp_titleOldEl">Old SP Title</label>
+				<input name="sp_titleOldEl" id="sp_titleOldEl" class="input--text" readonly />
+				</div>
+
+				<div class="form-row">
+				<label class="label--input" for="sp_poolnameEl">SP PoolName <span class="alert" id='spanEl1'>*</span></label>
+				<input name="sp_poolnameEl" id="sp_poolnameEl" class="input--text" readonly />
+				</div>
+
+				<div class="form-row">
+				<label class="label--input" for="sp_titleEl">SP Title <span class="alert" id='spanEl2'>*</span></label>
+				<input name="sp_titleEl" id="sp_titleEl" class="input--text" readonly placeholder="MY_SP"/>
+				</div>
+
+				<div class="form-row" style="display:none;">
+				<label class="label--input" for="sp_bodyOldEl">SP Body <span class="alert" id='spanEl9'>*</span></label>
+				<textarea name="sp_bodyOldEl" id="sp_bodyOldEl" class="input--textarea" style="height:150px; width:302px; padding:10px 20px;" readonly></textarea>
+				</div>
+
+				
+				<div class="form-row">
+				<label class="label--input" for="sp_bodyEl">SP Body <span class="alert" id='spanEl4'>*</span></label>
+				<textarea name="sp_bodyEl" id="sp_bodyEl" class="input--textarea" style="height:150px; width:302px; padding:10px 20px;" readonly></textarea>
+				</div>
+
+				<div class="form-row">
+				<label class="label--input" for="sp_call_syntaxEl">SP Call <span class="alert" id='spanEl3'>*</span></label>
+				<input name="sp_call_syntaxEl" id="sp_call_syntaxEl" class="input--text" readonly placeholder="CALL MY_SP(@VAR1,@VAR2,@ERRORVAR)"/>
+				</div>
+
+				<div class="form-row">
+				<label class="label--input" for="outvarTypesEl">Output Variable Types<span class="alert" id='spanEl8'></span></label>
+				<table class="label--input" style="text-align:left !important;width:302px;" for="outvarTypesEl">
+				<tr>
+					<td>TINYINT = -6 </td>
+					<td>SMALLINT = 5</td>
+				</tr>
+				<tr>
+					<td>INTEGER = 4</td>
+					<td>BIGINT = -5 </td>
+				</tr>
+				<tr>
+					<td>FLOAT = 6</td>
+					<td>REAL = 7 </td>
+				</tr>
+				<tr>
+					<td> DOBUBLE = 8 </td>
+					<td>NUMERIC = 2 </td>
+				</tr>
+				<tr>
+					<td>DECIMAL = 3</td>
+					<td>CHAR = 1 </td>
+				</tr>
+				<tr>
+					<td>VARCHAR = 12 </td>
+					<td>LONGVARCHAR = -1</td>
+				</tr>
+				
+				</table>
+				
+				<!-- <textarea name="outvarTypesEl" id="outvarTypesEl" class="input--textarea" style="height:60px; width:302px; padding:10px 20px;" readonly>
+					TINYINT = -6 SMALLINT = 5 INTEGER = 4 BIGINT = -5 <br/>
+					FLOAT = 6 REAL = 7 DOBUBLE = 8 NUMERIC = 2 DECIMAL = 3<br/>
+					CHAR = 1 VARCHAR = 12 LONGVARCHAR = -1
+				</textarea> -->
+				</div>
+
+				<div class="form-row">
+				<label class="label--input" for="sp_out_varEl">Output Variables<span class="alert" id='spanEl5'></span></label>
+				<textarea name="sp_out_varEl" id="sp_out_varEl" class="input--textarea" style="height:60px; width:302px; padding:10px 20px;" readonly placeholder="VAR1=12,VAR2=-5 (Choose type from above)"></textarea>
+				</div>
+				
+				<div class="form-row">
+				<label class="label--input" for="sp_err_varEl">Error Variable<span class="alert" id='spanEl6'></span></label>
+				<input name="sp_err_varEl" id="sp_err_varEl" class="input--text" readonly placeholder="ERRORVAR"/>
+				</div>
+				
+				<div class="form-row" id="statusDiv">
+				<label class="label--input" for="statusEl">Status</label>
+				<input name="statusEl" id="statusEl" class="input--text" readonly />
+				</div>
+
+				<div class="form-row" id="statusDropdown" style="display:none;">
+				<label class="label--input" for="editableStatusEl">Status <span class="alert" id='spanEl7'>*</span></label>
+				<select name="editableStatusEl" id="editableStatusEl" class="input--selectbox">
+					<option value="Y">Active</option>
+					<option value="N">Inactive</option>
+				</select>
+				</div>
+
+				<div class="form-row" id="nonEditableFld1">
+				<label class="label--input" for="touchTimeEl">Last Updated On</label>
+				<input name="touchTimeEl" id="touchTimeEl" class="input--text" readonly />
+				</div>
+
+				<div class="form-row" id="nonEditableFld2">
+				<label class="label--input" for="createTimeEl">Created On</label>
+				<input name="createTimeEl" id="createTimeEl" class="input--text" readonly />
+				</div>
+
+
+				<div class="form-row--meta" id="legendEl"><span class="alert">*</span> = Mandatory</div>
+
+				<div class="form-row--submit">
+					<input name="form-submit-add" id="form-submit-add" type=button value="Create" style="display:none;" onclick="if ( validateSpAppConfigForm() ) { addSPAppConfig(); xyzTable.applyFilter(); }" />
+					<input name="form-submit-update" id="form-submit-update" type=button value="Update" style="display:none;" onclick="if ( validateSpAppConfigForm() ) { updateSelectedSPAppConfigRecord(); xyzTable.applyFilter(); }" />
+					<input name="form-submit-edit" id="form-submit-edit" type=button value="Edit" onclick="prepForEdit()" />
+					<input name="form-submit" id="form-submit" type=button value="Close" onclick="lightboxClose()"/>
+				</div>
+		</div>
+		<div id="overlay-background" onClick="lightboxClose()"></div>
+
+		<div id="overlay-modal-alternate">
+
+			<h2 id="mainPermissionDiv">User Permissions</h2>
+
+				<div class="form-row" id="userDiv1" style="display:none;">
+				<label class="label--input" for="user1El">User 1 <span class="alert" id='span2El1'>*</span></label>
+				<input name="user1El" id="user1El" class="input--text" readonly />
+				<a id="user1El" href='#' onclick='prepForPermissionUpdate(this.id)'><img class='table-filter' src='table-images/edit.png'></a>
+				</div>
+
+				<div class="form-row" id="userDiv2" style="display:none;">
+				<label class="label--input" for="user2El">User 2</label>
+				<input name="user2El" id="user2El" class="input--text" readonly />
+				<a id="user2El" href='#' onclick='deletePermission(this.id)'><img class='table-filter' src='table-images/delete.png'></a>
+				<a id="user2El" href='#' onclick='prepForPermissionUpdate(this.id)'><img class='table-filter' src='table-images/edit.png'></a>
+				</div>
+
+				<div class="form-row" id="userDiv3" style="display:none;">
+				<label class="label--input" for="user3El">User 3</label>
+				<input name="user3El" id="user3El" class="input--text" readonly />
+				<a id="user3El" href='#' onclick='deletePermission(this.id)'><img class='table-filter' src='table-images/delete.png'></a>
+				<a id="user3El" href='#' onclick='prepForPermissionUpdate(this.id)'><img class='table-filter' src='table-images/edit.png'></a>
+				</div>
+
+				<div class="form-row" id="userDiv4" style="display:none;">
+				<label class="label--input" for="user4El">User 4</label>
+				<input name="user4El" id="user4El" class="input--text" readonly />
+				<a id="user4El" href='#' onclick='deletePermission(this.id)'><img class='table-filter' src='table-images/delete.png'></a>
+				<a id="user4El" href='#' onclick='prepForPermissionUpdate(this.id)'><img class='table-filter' src='table-images/edit.png'></a>
+				</div>
+
+				<div class="form-row" id="userDiv5" style="display:none;">
+				<label class="label--input" for="user5El">User 5</label>
+				<input name="user5El" id="user5El" class="input--text" readonly />
+				<a id="user5El" href='#' onclick='deletePermission(this.id)'><img class='table-filter' src='table-images/delete.png'></a>
+				<a id="user5El" href='#' onclick='prepForPermissionUpdate(this.id)'><img class='table-filter' src='table-images/edit.png'></a>
+				</div>
+
+
+				<div class="form-row" id="roles" style="display:none;">
+				<label class="label--input" for="roleEl">Select User</label>
+				<select class="input--selectbox" id="roleEl" name="roleEl">
+				</select>
+				</div>
+
+				<div class="form-row" id="objects" style="display:none;">
+				<label class="label--input" for="objectsEl">Service <span class="alert" id='span2El2'>*</span></label>
+				<select class="input--selectbox" id="objectsEl" name="objectsEl">
+				</select>
+				</div>
+
+
+				<div class="form-row--meta" id="legend2El"><span class="alert">*</span> = Mandatory</div>
+
+				<div class="form-row--submit">
+					<input name="form-submit-permission" id="form-submit-permission" type=button value="Authorize New User" onclick="prepForNewUserPermission()" />
+					<input name="form-submit-permission-update" id="form-submit-permission-update" type=button value="Update" style="display:none;" onclick="updatePermission()" />
+					<input name="form-submit-permission-grant" id="form-submit-permission-grant" type=button value="Authorize" style="display:none;" onclick="grantNewUserPermission()" />
+					<input name="form-submit-permission-view" id="form-submit-permission-view" type=button value="Back" style="display:none;" onclick="viewLastInstance()" />
+					<input name="form-submit-alternate" id="form-submit-alternate" type=button value="Close" onclick="lightboxCloseAlternate()"/>
+				</div>
+		</div>
+		<div id="overlay-background-alternate" onClick="lightboxCloseAlternate()"></div>
+
+
+	</body>
+</html>

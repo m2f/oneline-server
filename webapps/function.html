@@ -1,0 +1,238 @@
+﻿<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Data APIs</title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width">
+		<link rel="shortcut icon" href="favicon.ico">
+
+		<link rel="stylesheet" href="styles/main.css">
+		<link rel='stylesheet' href='styles/table.css' type='text/css' />
+		<link rel="stylesheet" href="styles/jquery-ui.css">
+
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script src="js/jquery-ui.js"></script>
+		<script type="text/javascript" src="js/table.js"></script>
+		<script type="text/javascript" src="js/controller.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/validation.js"></script>
+		<script type="text/javascript" src="js/appConfig.js"></script>
+		<script type="text/javascript" src="js/apiTest.js"></script>
+		<script type="text/javascript">
+
+            var xyzTable = new OnelineTable("xyzTable", "");
+			var tablePK;
+			var funcId;
+			var Id = null;
+
+			$(document).ready(function() {
+
+				paintHeaderAndFooter();
+
+				xyzTable.tableDiv = document.getElementById("xyzTable.tableDiv");
+                xyzTable.registerLoadJsonFunction(loadFunctionTable);
+                xyzTable.getTotalRowsForPagination = getTotalRowsForPaginationF;
+				xyzTable.refreshList();
+
+			});
+
+			function loadFunctionTable(sort, filter) {
+
+				var queryJson = '{ queries : [ {queryid : "GET_FUNCTION", params : [] } ] }';
+				var postData = {
+					service: "sql", action: "execute", query: queryJson, pool: "configpool",  format: "jsonp"
+				};
+
+				if (sort) postData.sort = sort;
+				if (filter) postData.where = filter;
+				if (xyzTable.offset) postData.offset = xyzTable.offset;
+				if (xyzTable.limit) postData.limit = xyzTable.limit;
+				try {
+					serverCallStart();
+					$.ajax ({
+						type: "GET",
+						async: false,
+						url: "oneline.html",
+						data: postData,
+						cache: false,
+						dataType: "text",
+						success: function onSuccess(data) {
+							try {
+								loadFunctionTableSuccess(data);
+							} finally {
+								serverCallEnd();
+				        	}
+						},
+						error: function onError(data) {
+							serverCallEnd();
+							document.getElementById("spanError").innerHTML = data.responseText;
+						}
+					});
+				} catch(error) {
+					serverCallEnd();
+				};
+			}
+
+			function getTotalRowsForPaginationF() {
+
+				var queryJson = '{ queries : [ {queryid : "GET_FUNCTION_COUNT", params : [] } ] }';
+				var xmlData = {
+					service : "sql", action : "execute", query : queryJson,  pool: "configpool", format: "jsonp"
+				};
+
+				if( xyzTable.tableListFilter && xyzTable.tableListFilter != "") xmlData.where = xyzTable.tableListFilter;
+				try {
+					serverCallStart();
+				$.ajax ({
+						type : "GET",
+						async : true,
+						url : "oneline.html",
+						data : xmlData,
+						cache : false,
+						dataType : "text",
+						success : function onSuccess(data) {
+							try {
+								var jsonData = $.parseJSON(data);
+								jsonData = jsonData[0];
+								var totalCount = jsonData['values'][0]['total'];
+								xyzTable.buildPaginationElement("GET_FUNCTION_COUNT",  "loadPage", totalCount, xyzTable.offset);
+							} finally {
+							serverCallEnd();
+							}
+						},
+						error : function onError(data) {
+							serverCallEnd();
+							document.getElementById("spanError").innerHTML = data.responseText;
+						}
+					});
+				} catch(error) {
+				 	serverCallEnd();
+				};
+			}
+
+			function loadPage(pageNo) {
+				xyzTable.openAPage(pageNo);
+			}
+
+            function  loadFunctionTableSuccess(data) {
+				
+                var headers = ['Status', 'Function Id', 'Function Body', 'Filter'];
+				var cols = ['status', 'funcId', 'funcBody', 'ACTIONS'];
+				var filterFields = ['status', 'funcId', 'funcBody', 'ACTIONS'];
+				var sortFields = ['status', 'funcId', 'funcBody'];
+				var docTag = "values";
+
+                var intFilter = [];
+				var dateFilter = [];
+
+                xyzTable.selectFilterValCodes['status'] = ["", 'Y', 'N'];
+				xyzTable.selectFilterValDescCodes['status'] = ["Choose", "Active", "Inactive"];
+								
+				prepareFunctionRecords(data);
+                //xyzTable.loadJSonData(data, headers, cols, filterFields, sortFields, docTag, null, null, null , null);
+                xyzTable.loadJSonData(data, headers, cols, filterFields, sortFields, docTag, intFilter, dateFilter, listFunctionTableOnRow , FunctionListsfilterDecorator);
+
+            }
+
+			function listFunctionTableOnRow(row, col, val) {
+
+				if (col == 0) {
+					if (val == "y" || val == "Y")
+						return "Active";
+
+					else if (val == "n" || val == "N")
+						return "Inactive";
+
+					else
+						return val;
+				}
+				
+				if (col == 1) {
+					funcId = xyzTable.records[row]['funcId'];
+					return val;
+				}
+
+				if (col == 3) {
+					return "<a href='#' onclick='prepForEditF(); viewRecordDetailsF(\"" + funcId + "\");'><img class='table-filter' src='table-images/edit.png'></a>"
+								+
+							" <a href='#' onclick='if ( deleteFunction( \"" + funcId + "\") ) xyzTable.loadJSonF(xyzTable.tableListSortPart, xyzTable.tableListFilter);'><img class='table-filter' src='table-images/delete.png'></a>"
+								+
+							" <a href='#' onclick='testFunction(\"" + funcId + "\")'><img class='table-filter' src='table-images/sql.png'></a>";
+				}
+				return val;
+			}
+
+	        //CUSTOM Based on the Decoator Type.
+            function FunctionListsfilterDecorator(filterField) {
+		        if (filterField == "status" ) {
+			        return xyzTable.getSelectFilterElem(filterField, xyzTable.filterVals[ filterField ], xyzTable.selectFilterValCodes[filterField],
+					        xyzTable.selectFilterValDescCodes[filterField], "xyzTable.fillFilterVal", "xyzTable.fetchResults");
+		        } else if (filterField == "ACTIONS")
+			        return xyzTable.getApplyFilterElem();
+		        return xyzTable.getTextFilterElem(filterField, xyzTable.filterVals[ filterField ], "xyzTable.fillFilterVal", "xyzTable.fetchResults");
+	        }
+
+
+		</script>
+	</head>
+	
+	<body class="template--companySetup">
+
+		<div id="divHeader"></div>
+		<div class="grid-row-container">
+			<div class="grid-row">
+
+				<span id="spanError" class="error-msg"></span>
+				<br />
+				<h2>Functions</h2>
+				<div class="button--goto">
+					<input name="add-app-config" id="add-app-config" type=button value="Add New Function" onclick="prepForAddF()" style="display: inline-block;"/>
+					<input name="add-app-config" id="add-app-config" type=button value="Publish" onclick="refreshFuncAuth();" style="display: inline-block;"/>
+				</div>
+					<div id="xyzTable.tableDiv" style="overflow: auto;">
+				</div>
+			</div>
+		</div>
+
+	<div id="divFooter"></div>
+		<div id="overlay-modal">
+
+			<div id="errorMessages"></div>
+			<h2 id="lightboxHeader">Function Details</h2>
+
+				<div class="form-row" >
+					<label class="label--input" for="statusEl">Status <span class="alert" id='spanEl1'>*</span></label>
+					<select name="statusEl" id="statusEl" class="input--selectbox">
+					<option value="Y">Active</option>
+					<option value="N">Inactive</option>
+				</select>
+				</div>
+				
+				<div class="form-row" style="display:none;">
+				<label class="label--input" for="funcIdOldEl">Old Function Id</label>
+				<input name="funcIdOldEl" id="funcIdOldEl" class="input--text" readonly />
+				</div>
+				
+				<div class="form-row">
+					<label class="label--input" for="funcIdEl">Function Id <span class="alert" id='spanEl2'>*</span></label>
+					<input name="funcIdEl" id="funcIdEl" class="input--text" />
+				</div>
+
+				<div class="form-row">
+					<label class="label--input" for="funcBodyEl">Function Body <span class="alert" id='spanEl3'>*</span></label>
+					<textarea name="funcBodyEl" id="funcBodyEl" class="input--textarea" style="height:120px; width:340px; padding:10px 20px;" ></textarea>
+				</div>
+
+				<div class="form-row--meta" id="legendEl"><span class="alert">*</span> = Mandatory</div>
+
+				<div class="form-row--submit">
+					<input name="form-submit-add" id="form-submit-add" type=button value="Add" style="display:none;" onclick=" { addFunction(); xyzTable.applyFilter(); }" />
+					<input name="form-submit-update" id="form-submit-update" type=button value="Update" style="display:none;" onclick=" { updateSelectedFunctionRecord(); xyzTable.applyFilter(); } " />
+					<input name="form-submit-edit" id="form-submit-edit" type=button value="Edit" onclick="prepForEdit()" />
+					<input name="form-submit" id="form-submit" type=button value="Close" onclick="lightboxClose()"/>
+				</div>
+		</div>
+		<div id="overlay-background" onClick="lightboxClose()"></div>
+	
+	</body>
+</html>

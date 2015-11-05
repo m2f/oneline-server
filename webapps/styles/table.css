@@ -1,0 +1,491 @@
+.table-plain {
+	 font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	 font-size: 12px;
+	 border-collapse: collapse;
+	 text-align: left;
+ }
+
+	 .table-plain th {
+		 font-size: 14px;
+		 font-weight: normal;
+		 padding: 10px 8px;
+		 border-bottom: 1px solid #CCC;
+		 text-align: left;
+	 }
+
+	 .table-plain td {
+		 padding: 9px 8px 0px 8px;
+		 border-bottom: 1px solid #CCC;
+	 }
+
+	.table-plain td:nth-child(even) {
+		background: #f5f5f5;
+	}
+
+	.table-plain th:nth-child(even) {
+		background: #e6e2d8;
+	}
+
+	.table-plain th:nth-child(odd) {
+		background: #ede8db;
+	}
+
+	.table-plain thead:last-child th {
+		background: #CCC;
+	}
+
+
+	.table-plain tr:hover {
+		background: #f5f5f5;
+	}
+
+	.table-plain tr:hover td:nth-child(even) {
+		background: #ededed;
+	}
+	.table-plain .nextprev {
+		background: none;
+		text-align: right;
+		border: 0;
+	}
+
+	.table-plain tr:hover .nextprev {
+		background: #FFF;
+	}
+
+	.sortimg {
+		margin-right: 10px;
+	}
+
+
+    .pageNo {
+        margin-right: 8px;
+    }
+
+    .pageNoSelected {
+        color: #036D3B;
+    }
+
+    .pageNext {
+        margin-left: 24px;
+    }
+
+    .pagePrevious {
+        margin-right: 24px;
+        display:none;
+    }
+
+/*
+
+
+        .table-rulebook {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 12px;
+            background: #fff;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+            .table-rulebook th {
+                font-size: 14px;
+                font-weight: normal;
+                color: #039;
+                padding: 10px 8px;
+                border-bottom: 2px solid #6678b1;
+                text-align: left;
+            }
+
+            .table-rulebook td {
+                border-bottom: 1px solid #ccc;
+                color: #669;
+                padding: 6px 8px;
+            }
+
+                .table-rulebook td a {
+                    color: #0000ff;
+                }
+
+            .table-rulebook tbody tr:hover td {
+                color: #009;
+            }
+
+
+        .ver-minimalist {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 12px;
+            text-align: left;
+            border-collapse: collapse;
+        }
+
+            .ver-minimalist th {
+                padding: 8px 2px;
+                font-weight: normal;
+                font-size: 14px;
+                border-bottom: 2px solid #6678b1;
+                border-right: 30px solid #fff;
+                border-left: 30px solid #fff;
+                color: #039;
+                text-align: left;
+            }
+
+            .ver-minimalist td {
+                padding: 12px 2px 0px 2px;
+                border-right: 30px solid #fff;
+                border-left: 30px solid #fff;
+                color: #669;
+            }
+
+                .ver-minimalist td a {
+                    color: #0000ff;
+                }
+
+        .table-rulebook-shade {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 12px;
+            text-align: left;
+            border-collapse: collapse;
+        }
+
+            .table-rulebook-shade th {
+                font-size: 13px;
+                font-weight: normal;
+                padding: 8px;
+                background: #b9c9fe;
+                border-top: 4px solid #aabcfe;
+                border-bottom: 1px solid #fff;
+                color: #039;
+                text-align: left;
+            }
+
+            .table-rulebook-shade td {
+                padding: 8px;
+                background: #e8edff;
+                border-bottom: 1px solid #fff;
+                color: #669;
+                border-top: 1px solid transparent;
+            }
+
+            .table-rulebook-shade tr:hover td {
+                background: #d0dafd;
+                color: #339;
+            }
+
+
+        .table-plain-shade {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 12px;
+            text-align: center;
+            border-collapse: collapse;
+            border-top: 7px solid #9baff1;
+            border-bottom: 7px solid #9baff1;
+        }
+
+            .table-plain-shade th {
+                font-size: 13px;
+                font-weight: normal;
+                padding: 8px;
+                background: #e8edff;
+                border-right: 1px solid #9baff1;
+                border-left: 1px solid #9baff1;
+                color: #039;
+            }
+
+            .table-plain-shade td {
+                padding: 8px;
+                background: #e8edff;
+                border-right: 1px solid #aabcfe;
+                border-left: 1px solid #aabcfe;
+                color: #669;
+            }
+
+
+
+        .table-filter {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 12px;
+            text-align: left;
+            border-collapse: collapse;
+            border: 1px solid #69c;
+        }
+
+            .table-filter th {
+                padding: 12px 17px 12px 17px;
+                font-weight: normal;
+                font-size: 14px;
+                color: #039;
+                border-bottom: 1px dashed #69c;
+                text-align: left;
+            }
+
+            .table-filter td {
+                padding: 7px 17px 7px 17px;
+                color: #669;
+            }
+
+            .table-filter tbody tr:hover td {
+                color: #339;
+                background: #d0dafd;
+            }
+
+
+        .table-data {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 12px;
+            text-align: left;
+            border-collapse: collapse;
+            border: 1px solid #69c;
+        }
+
+            .table-data th {
+                padding: 15px 10px 10px 10px;
+                font-weight: normal;
+                font-size: 14px;
+                color: #039;
+                text-align: left;
+            }
+
+            .table-data tbody {
+                background: #e8edff;
+            }
+
+            .table-data td {
+                padding: 10px;
+                color: #669;
+                border-top: 1px dashed #fff;
+            }
+
+            .table-data tbody tr:hover td {
+                color: #339;
+                background: #d0dafd;
+            }
+
+
+
+        .table-rounded {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 12px;
+            text-align: left;
+            border-collapse: collapse;
+        }
+
+            .table-rounded thead th.rounded-head-left {
+                background: #b9c9fe url('table-images/left.png') left -1px no-repeat;
+            }
+
+            .table-rounded thead th.rounded-head-right {
+                background: #b9c9fe url('table-images/right.png') right -1px no-repeat;
+            }
+
+            .table-rounded th {
+                padding: 8px;
+                font-weight: normal;
+                font-size: 13px;
+                color: #039;
+                background: #b9c9fe;
+                text-align: left;
+            }
+
+            .table-rounded td {
+                padding: 8px;
+                background: #e8edff;
+                border-top: 1px solid #fff;
+                color: #669;
+            }
+
+                .table-rounded td a {
+                    color: #0000ff;
+                }
+
+
+            .table-rounded tfoot td.rounded-foot-left {
+                background: #e8edff url('table-images/botleft.png') left bottom no-repeat;
+            }
+
+            .table-rounded tfoot td.rounded-foot-right {
+                background: #e8edff url('table-images/botright.png') right bottom no-repeat;
+            }
+
+            .table-rounded tbody tr:hover td {
+                background: #d0dafd;
+            }
+
+
+        .background-image {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 12px;
+            text-align: left;
+            border-collapse: collapse;
+            background: url('table-images/blurry.jpg') 330px 59px no-repeat;
+        }
+
+            .background-image th {
+                padding: 12px;
+                font-weight: normal;
+                font-size: 14px;
+                color: #339;
+                text-align: left;
+            }
+
+            .background-image td {
+                padding: 9px 12px;
+                color: #669;
+                border-top: 1px solid #fff;
+            }
+
+            .background-image tfoot td {
+                font-size: 11px;
+            }
+
+            .background-image tbody td {
+                background: url('table-images/back.png');
+            }
+
+            * html .background-image tbody td {
+                filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='table-images/back.png',sizingMethod='crop');
+                background: none;
+            }
+
+            .background-image tbody tr:hover td {
+                color: #339;
+                background: none;
+            }
+
+
+        .table-graded {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 12px;
+            text-align: left;
+            border-collapse: collapse;
+        }
+
+            .table-graded th {
+                font-size: 13px;
+                font-weight: normal;
+                padding: 8px;
+                background: #b9c9fe url('table-images/gradhead.png') repeat-x;
+                border-top: 2px solid #d3ddff;
+                border-bottom: 1px solid #fff;
+                color: #039;
+                text-align: left;
+            }
+
+            .table-graded td {
+                padding: 8px;
+                border-bottom: 1px solid #fff;
+                color: #669;
+                border-top: 1px solid #fff;
+                background: #e8edff url('table-images/gradback.png') repeat-x;
+            }
+
+            .table-graded tfoot tr td {
+                background: #e8edff;
+                font-size: 12px;
+                color: #99c;
+            }
+
+            .table-graded tbody tr:hover td {
+                background: #d0dafd url('table-images/gradhover.png') repeat-x;
+                color: #339;
+            }
+
+
+        .pattern-style-a {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 12px;
+            text-align: left;
+            border-collapse: collapse;
+            background: url('table-images/pattern.png');
+        }
+
+            .pattern-style-a thead tr {
+                background: url('table-images/pattern-head.png');
+            }
+
+            .pattern-style-a th {
+                font-size: 13px;
+                font-weight: normal;
+                padding: 8px;
+                border-bottom: 1px solid #fff;
+                color: #039;
+            }
+
+            .pattern-style-a td {
+                padding: 8px;
+                border-bottom: 1px solid #fff;
+                color: #669;
+                border-top: 1px solid transparent;
+            }
+
+            .pattern-style-a tbody tr:hover td {
+                color: #339;
+                background: #fff;
+            }
+
+
+        .pattern-style-b {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 12px;
+            text-align: left;
+            border-collapse: collapse;
+            background: url('table-images/patternb.png');
+        }
+
+            .pattern-style-b thead tr {
+                background: url('table-images/patternb-head.png');
+            }
+
+            .pattern-style-b th {
+                font-size: 13px;
+                font-weight: normal;
+                padding: 8px;
+                border-bottom: 1px solid #fff;
+                color: #039;
+            }
+
+            .pattern-style-b td {
+                padding: 8px;
+                border-bottom: 1px solid #fff;
+                color: #669;
+                border-top: 1px solid transparent;
+            }
+
+            .pattern-style-b tbody tr:hover td {
+                color: #339;
+                background: #cdcdee;
+            }
+
+        .tablespace {
+            border: solid 2px #ffffff;
+            -moz-border-radius: 8px;
+            -webkit-border-radius: 8px;
+            text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.2);
+            -moz-text-shadow: 0.5px 0.5px 0 rgba(255, 255, 255, 0.2);
+        }
+
+
+        .nextprev{
+            text-align:right;
+
+        }
+
+        .sortimg {
+            border:0
+			width:12px;
+			height:12px;
+        }
+
+        .table-filter{
+			border: 0;
+			width:16px;
+			height:16px;
+		}
+
+		 .filter-text-input {
+			width:64px;
+		 }
+
+		 .filter-reset {
+			 display:none;
+		 }
+
+*/
+

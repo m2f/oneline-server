@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Data service</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/jquery-ui.css">
+
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/controller.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/apiTest.js"></script>
+	<script type="text/javascript" src="js/table.js"></script>
+	<script type="text/javascript" src="js/appConfig.js"></script>
+
+    <script type="text/javascript">
+
+    var sp_title;
+	$(document).ready(function () {
+
+		paintHeaderAndFooter();
+		//document.getElementById('pooldbEl').value = getCookie("poolname");
+		var url = window.location.href;
+		url = decodeURIComponent(url);
+		var args = getDecodedUrlVars(url);
+		sp_title = args["sp_title"];
+		
+		if (args["sp_title"]) {
+			getSp(args["sp_title"]);
+		}
+	});
+
+    </script>
+</head>
+
+<body class="template--companySetup">
+
+    <span id="spanError" class="error-msg"></span>
+	<div id="divHeader"></div>
+
+	<div class="grid-row-container" id="testThis">
+		<div class="grid-row">
+		<br/>
+
+				<div class="form-row">
+				<label class="label--input" for="sp_poolnameEl">SP PoolName </label>
+				<input name="sp_poolnameEl" id="sp_poolnameEl" class="input--text" readonly />
+				</div>
+
+				<div class="form-row">
+				<label class="label--input" for="sp_titleEl">SP Title </label>
+				<input name="sp_titleEl" id="sp_titleEl" class="input--text" readonly placeholder="MY_SP"/>
+				</div>
+				
+				<div class="form-row">
+				<label class="label--input" for="sp_bodyEl">SP Body </label>
+				<textarea name="sp_bodyEl" id="sp_bodyEl" class="input--textarea" style="height:150px; width:302px; padding:10px 20px;" readonly></textarea>
+				</div>
+
+				<div class="form-row">
+				<label class="label--input" for="sp_out_varEl">Variables </label>
+				<textarea name="sp_out_varEl" id="sp_out_varEl" class="input--textarea" style="height:60px; width:302px; padding:10px 20px;" ></textarea>
+				</div>
+				
+				<div class="form-row--submit">
+				<input name="executeEl" id="executeEl" type=button value="Execute SP" onclick="runSp(sp_title)"/>
+				</div>
+			
+				<span id="spanError" class="error-msg"></span>
+				<br />
+		</div>
+	</div>
+		<div class="grid-row-container" id="testThis2">
+			<div class="grid-row"></div>
+		</div>
+
+	<!--[if lt IE 10]>
+      <p class="browser-warning">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+<div id="divFooter"></div>
+</body>
+</html>

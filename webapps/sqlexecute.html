@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Data service</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/jquery-ui.css">
+
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/controller.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/apiTest.js"></script>
+
+
+    <script type="text/javascript">
+
+	$(document).ready(function () {
+
+		paintHeaderAndFooter();
+
+		populateParameterCountBox();
+		document.getElementById('pooldbEl').value = getCookie("poolname");
+		var url = window.location.href;
+		url = decodeURIComponent(url);
+		var args = getDecodedUrlVars(url);
+
+		if (args["configid"]) {
+			getApi(args["configid"]);
+		}
+	});
+    </script>
+</head>
+
+<body class="template--companySetup">
+
+    <span id="spanError" class="error-msg"></span>
+	<div id="divHeader"></div>
+
+	<div class="grid-row-container" id="testThis">
+		<div class="grid-row">
+		<br/>
+		
+			<div class="form-row">
+				<label class="label--input" for="pooldbEl">Configuration name</label>
+				<input name="pooldbEl" id="pooldbEl" class="input--text" value="configpool" />
+			</div>
+
+			<div class="form-row">
+				<label class="label--input" for="bodyEl">Query</label>
+				<textarea name="bodyEl" id="bodyEl" class="input--textarea" style="height:150px; width:800px; padding:10px 20px;" readonly></textarea>
+			</div>
+
+			<div class="form-row" id="paramsTDiv">
+				<label class="label--input" for="paramsTEl">Number of parameters</label>
+				<select name="paramsTEl" id="paramsTEl" class="input--selectbox" onchange="showParamDivs()" >
+					<option value="0">Select</option>
+				</select>
+			</div>
+
+			<div class="form-row" id="tenantIdDiv" style="display:none;">
+				<label class="label--input" for="tenantIdEl">Tenant Id</label>
+				<input name="tenantIdEl" id="tenantIdEl" class="input--text" />
+			</div>
+
+			<div class="form-row" id="userIdDiv" style="display:none;">
+				<label class="label--input" for="userIdEl">User Id</label>
+				<input name="userIdEl" id="userIdEl" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params1Div" style="display:none;">
+				<label class="label--input" for="params1El">Parameter 1 <span class="alert">*</span></label>
+				<input name="params1El" id="params1El" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params2Div" style="display:none;">
+				<label class="label--input" for="params2El">Parameter 2 <span class="alert">*</span></label>
+				<input name="params2El" id="params2El" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params3Div" style="display:none;">
+				<label class="label--input" for="params3El">Parameter 3 <span class="alert">*</span></label>
+				<input name="params3El" id="params3El" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params4Div" style="display:none;">
+				<label class="label--input" for="params4El">Parameter 4 <span class="alert">*</span></label>
+				<input name="params4El" id="params4El" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params5Div" style="display:none;">
+				<label class="label--input" for="params5El">Parameter 5 <span class="alert">*</span></label>
+				<input name="params5El" id="params5El" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params6Div" style="display:none;">
+				<label class="label--input" for="params6El">Parameter 6 <span class="alert">*</span></label>
+				<input name="params6El" id="params6El" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params7Div" style="display:none;">
+				<label class="label--input" for="params7El">Parameter 7 <span class="alert">*</span></label>
+				<input name="params7El" id="params7El" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params8Div" style="display:none;">
+				<label class="label--input" for="params8El">Parameter 8 <span class="alert">*</span></label>
+				<input name="params8El" id="params8El" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params9Div" style="display:none;">
+				<label class="label--input" for="params9El">Parameter 9 <span class="alert">*</span></label>
+				<input name="params9El" id="params9El" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params10Div" style="display:none;">
+				<label class="label--input" for="params10El">Parameter 10 <span class="alert">*</span></label>
+				<input name="params10El" id="params10El" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params11Div" style="display:none;">
+				<label class="label--input" for="params11El">Parameter 11 <span class="alert">*</span></label>
+				<input name="params11El" id="params11El" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params12Div" style="display:none;">
+				<label class="label--input" for="params12El">Parameter 12 <span class="alert">*</span></label>
+				<input name="params12El" id="params12El" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params13Div" style="display:none;">
+				<label class="label--input" for="params13El">Parameter 13 <span class="alert">*</span></label>
+				<input name="params13El" id="params13El" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params14Div" style="display:none;">
+				<label class="label--input" for="params14El">Parameter 14 <span class="alert">*</span></label>
+				<input name="params14El" id="params14El" class="input--text" />
+			</div>
+
+			<div class="form-row" id="params15Div" style="display:none;">
+				<label class="label--input" for="params15El">Parameter 15 <span class="alert">*</span></label>
+				<input name="params15El" id="params15El" class="input--text" />
+			</div>
+
+			<div class="form-row--meta" id="legendEl"><span class="alert">*</span> = Mandatory</div>
+
+			<div class="form-row--submit">
+				<input name="executeEl" id="executeEl" type=button value="Execute" onclick="runApi()"/>
+			</div>
+
+				<span id="spanError" class="error-msg"></span>
+				<br />
+		</div>
+	</div>
+
+		<div class="grid-row-container" id="testThis2">
+			<div class="grid-row"></div>
+		</div>
+<div id="divFooter"></div>
+</body>
+</html>
