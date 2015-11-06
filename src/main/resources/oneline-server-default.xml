@@ -90,38 +90,5 @@
 		</description>
 	</property>
 	
-		<property>
-		<name>table.ids.amount</name>
-		<value></value>
-		<description>
-			The buffer capacity of sequencekeys given in the below format
-			seq1=100,seq2=200,seq3=500 etc
-		</description>
-	</property>
-
-	<property>
-		<name>table.ids.amount.default.value</name>
-		<value>100</value>
-		<description>
-			The default value to be used if not given in above property.
-		</description>
-	</property>
-	
-	<property>
-		<name>current.machine.ip</name>
-		<value>localhost</value>
-		<description>
-			The ip that it will use to find out the users to configure for database during startup.
-		</description>
-	</property>
-
-	<property>
-		<name>db.records.fetch.log.interval</name>
-		<value>5000</value>
-		<description>
-			The count interval after which a log will be written while fetching records from database.
-		</description>
-	</property>
-	
 		
 </configuration>
